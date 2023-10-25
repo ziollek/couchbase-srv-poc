@@ -1,6 +1,6 @@
 {$CONSUL_SUFFIX}:53 {
   debug
-  log . "service appengine query: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+  log . "query to wrapper: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
   rewrite name regex _couchbase._tcp.(.*).$ {1}
   forward . 127.0.0.1:5300 {
       force_tcp
@@ -8,7 +8,7 @@
 }
 
 {$CONSUL_SUFFIX}:5300 {
-  log . "service appengine forwarded query: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
+  log . "forwarded query: {remote}:{port} - {>id} {type} {class} {name} {proto} {size} {>do} {>bufsize} {rcode} {>rflags} {rsize} {duration}"
   forward . {$CONSUL_AGENT} {
       force_tcp
   }

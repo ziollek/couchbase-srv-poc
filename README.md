@@ -25,7 +25,7 @@ CONSUL_SUFFIX=suffix-name
 docker-compose up
 ```
 
-## sample dns resolution
+### sample dns resolution (in another terminal than docker-compose)
 
 ```
 docker-compose exec dnsutils bash
