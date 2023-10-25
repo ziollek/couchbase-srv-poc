@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  coredns:
+    image: coredns/coredns
+    command: ["-conf", "/etc/coredns/Corefile"]
+    volumes:
+      - ./Corefile:/etc/coredns/Corefile
+    networks:
+      virt-bridge:
+        ipv4_address: 192.168.3.30
+    environment:
+      - CONSUL_SUFFIX
+      - CONSUL_AGENT
+  connection-tester:
+    image: golang
+    restart: always
+    tty: true
+    command: "-f /dev/null"
+    entrypoint: /usr/bin/tail
+    working_dir: /opt/cb-srv-connect
+    networks:
+      virt-bridge:
+        ipv4_address: 192.168.3.2
+    dns:
+      - 192.168.3.30
+    volumes:
+      - ./cb-srv-connect:/opt/cb-srv-connect
+  dnsutils:
+    image: massenz/dnsutils:2.3.1
+    networks:
+      virt-bridge:
+        ipv4_address: 192.168.3.3
+    dns:
+      - 192.168.3.30
+
+networks:
+  virt-bridge:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 192.168.3.0/24
+         gateway: 192.168.3.1
